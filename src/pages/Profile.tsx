@@ -344,23 +344,7 @@ export const Profile: React.FC = () => {
           )}
         </div>
 
-        {/* Demo Switcher Select Box */}
-        <div className="p-3 bg-surface-container-low rounded-2xl border border-surface-container">
-          <label className="text-xs font-bold text-outline block mb-1.5 uppercase tracking-wider">
-            Switch Demo Account
-          </label>
-          <select
-            value={currentUser.id}
-            onChange={(e) => switchDemoUser(e.target.value)}
-            className="w-full min-h-[44px] px-3 bg-surface-container-lowest rounded-xl text-xs font-semibold text-on-surface border border-surface-container outline-none"
-          >
-            {SEED_STUDENTS.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.full_name} ({s.role.toUpperCase()}) — {s.department.split('&')[0]}
-              </option>
-            ))}
-          </select>
-        </div>
+
 
         {/* Sign Out */}
         <Button

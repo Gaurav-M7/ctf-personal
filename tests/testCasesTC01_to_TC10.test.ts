@@ -8,6 +8,7 @@ import { DYPCOE_COORDINATES } from '../src/data/puneSeedData';
 describe('CampusRide Automated Test Matrix: TC-01 to TC-10', () => {
   beforeEach(() => {
     demoStore.resetDemoData();
+    demoStore.loadSampleSeedData();
   });
 
   // TC-01: Valid registration creates a profile
@@ -229,5 +230,46 @@ describe('CampusRide Automated Test Matrix: TC-01 to TC-10', () => {
 
     expect(matches).toEqual([]);
     expect(matches.length).toBe(0);
+  });
+
+  it('TC-11: user can enter where they are coming from, post their route, and peers can browse it in the community feed', () => {
+    // 1. Student enters custom origin and posts route
+    const customOrigin = 'Pimple Gurav, Sai Chowk';
+    const postedRoute = demoStore.addRoute({
+      student_id: 'student-new-poster',
+      student_name: 'Pooja Patil',
+      student_department: 'AI & Data Science',
+      student_year: 'TE',
+      student_is_verified: true,
+      role: 'offer',
+      origin_name: customOrigin,
+      origin_lat: 18.5850,
+      origin_lng: 73.8150,
+      destination_name: DYPCOE_COORDINATES.name,
+      destination_lat: DYPCOE_COORDINATES.latitude,
+      destination_lng: DYPCOE_COORDINATES.longitude,
+      polyline_coords: [
+        [18.5850, 73.8150],
+        [18.6448, 73.7580],
+      ],
+      distance_km: 9.2,
+      duration_min: 22,
+      arrival_time: '08:45',
+      arrival_window_min: 15,
+      days_of_week: ['M', 'T', 'W', 'T', 'F'],
+      seats_available: 3,
+      is_active: true,
+    });
+
+    expect(postedRoute.id).toBeDefined();
+    expect(postedRoute.origin_name).toBe(customOrigin);
+
+    // 2. Peer looks for routes posted by other students
+    const allCommunityRoutes = demoStore.getRoutes();
+    const foundPosted = allCommunityRoutes.find((r) => r.origin_name.includes('Pimple Gurav'));
+
+    expect(foundPosted).toBeDefined();
+    expect(foundPosted?.student_name).toBe('Pooja Patil');
+    expect(foundPosted?.seats_available).toBe(3);
   });
 });

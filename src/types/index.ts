@@ -63,6 +63,11 @@ export interface GeoLocation {
 export interface Route {
   id: string;
   student_id: string;
+  student_name?: string;
+  student_department?: string;
+  student_year?: string;
+  student_is_verified?: boolean;
+  student_avatar?: string;
   role: StudentRole;
   origin_name: string;
   origin_lat: number;
@@ -77,7 +82,10 @@ export interface Route {
   arrival_window_min: number;
   days_of_week: string[]; // ['M', 'T', 'W', 'T', 'F', 'S']
   vehicle_type?: VehicleType | 'any';
+  vehicle_model?: string;
+  seats_available?: number;
   is_active: boolean;
+  created_at?: string;
 }
 
 export interface MatchResult {

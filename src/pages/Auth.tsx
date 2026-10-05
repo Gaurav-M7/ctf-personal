@@ -305,48 +305,15 @@ export const Auth: React.FC = () => {
         </Button>
       </form>
 
-      {/* Demo Quick Logins Box (Essential for Evaluation & Testing) */}
-      <div className="mt-6 p-4 rounded-2xl bg-surface-container-low border border-surface-container text-center">
-        <span className="font-label-sm text-xs font-bold text-outline block mb-2 uppercase tracking-wider">
-          Demo Evaluator Quick Logins
-        </span>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              loginAsDemoStudent();
-              navigate('/');
-            }}
-            icon="directions_car"
-          >
-            Demo Driver (Rohan)
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              switchDemoUser('student-sneha-02');
-              navigate('/');
-            }}
-            icon="hail"
-          >
-            Demo Rider (Sneha)
-          </Button>
+      {/* College Domain & Security Notice */}
+      <div className="mt-6 p-3.5 rounded-2xl bg-surface-container-low border border-surface-container text-center flex flex-col items-center gap-1.5">
+        <div className="flex items-center gap-1.5 text-xs font-semibold text-primary">
+          <span className="material-symbols-outlined text-[16px]">domain_verification</span>
+          <span>DYPCOE Institutional Authentication Only</span>
         </div>
-        <Button
-          variant="secondary"
-          size="sm"
-          fullWidth
-          className="mt-2"
-          onClick={() => {
-            loginAsDemoAdmin();
-            navigate('/admin');
-          }}
-          icon="admin_panel_settings"
-        >
-          Demo College Admin (Prof. Mahajan)
-        </Button>
+        <p className="text-[11px] text-on-surface-variant max-w-xs leading-normal">
+          External social logins (Google, Facebook) are disabled for campus safety. Only official college email IDs are permitted.
+        </p>
       </div>
     </div>
   );

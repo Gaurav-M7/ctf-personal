@@ -45,20 +45,31 @@ class DemoStore {
   private init() {
     try {
       if (typeof localStorage !== 'undefined') {
+        // One-time cleanup of old dummy data if previously stored
+        if (localStorage.getItem('campusride_cleaned_v2') !== 'true') {
+          localStorage.removeItem(STORAGE_KEYS.STUDENTS);
+          localStorage.removeItem(STORAGE_KEYS.ROUTES);
+          localStorage.removeItem(STORAGE_KEYS.VERIFICATION_REQUESTS);
+          localStorage.removeItem(STORAGE_KEYS.RIDE_REQUESTS);
+          localStorage.removeItem(STORAGE_KEYS.NOTIFICATIONS);
+          localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+          localStorage.setItem('campusride_cleaned_v2', 'true');
+        }
+
         const storedStudents = localStorage.getItem(STORAGE_KEYS.STUDENTS);
-        this.students = storedStudents ? JSON.parse(storedStudents) : [...SEED_STUDENTS];
+        this.students = storedStudents ? JSON.parse(storedStudents) : [];
 
         const storedRoutes = localStorage.getItem(STORAGE_KEYS.ROUTES);
-        this.routes = storedRoutes ? JSON.parse(storedRoutes) : [...SEED_ROUTES];
+        this.routes = storedRoutes ? JSON.parse(storedRoutes) : [];
 
         const storedVerifications = localStorage.getItem(STORAGE_KEYS.VERIFICATION_REQUESTS);
-        this.verifications = storedVerifications ? JSON.parse(storedVerifications) : [...SEED_VERIFICATION_REQUESTS];
+        this.verifications = storedVerifications ? JSON.parse(storedVerifications) : [];
 
         const storedRequests = localStorage.getItem(STORAGE_KEYS.RIDE_REQUESTS);
-        this.rideRequests = storedRequests ? JSON.parse(storedRequests) : [...SEED_RIDE_REQUESTS];
+        this.rideRequests = storedRequests ? JSON.parse(storedRequests) : [];
 
         const storedNotifs = localStorage.getItem(STORAGE_KEYS.NOTIFICATIONS);
-        this.notifications = storedNotifs ? JSON.parse(storedNotifs) : [...SEED_NOTIFICATIONS];
+        this.notifications = storedNotifs ? JSON.parse(storedNotifs) : [];
 
         const storedRatings = localStorage.getItem(STORAGE_KEYS.RATINGS);
         this.ratings = storedRatings ? JSON.parse(storedRatings) : [];
@@ -66,18 +77,18 @@ class DemoStore {
         const storedReports = localStorage.getItem(STORAGE_KEYS.REPORTS);
         this.reports = storedReports ? JSON.parse(storedReports) : [];
       } else {
-        this.students = [...SEED_STUDENTS];
-        this.routes = [...SEED_ROUTES];
-        this.verifications = [...SEED_VERIFICATION_REQUESTS];
-        this.rideRequests = [...SEED_RIDE_REQUESTS];
-        this.notifications = [...SEED_NOTIFICATIONS];
+        this.students = [];
+        this.routes = [];
+        this.verifications = [];
+        this.rideRequests = [];
+        this.notifications = [];
       }
     } catch (e) {
-      this.students = [...SEED_STUDENTS];
-      this.routes = [...SEED_ROUTES];
-      this.verifications = [...SEED_VERIFICATION_REQUESTS];
-      this.rideRequests = [...SEED_RIDE_REQUESTS];
-      this.notifications = [...SEED_NOTIFICATIONS];
+      this.students = [];
+      this.routes = [];
+      this.verifications = [];
+      this.rideRequests = [];
+      this.notifications = [];
     }
   }
 
@@ -105,8 +116,7 @@ class DemoStore {
         if (stored) return JSON.parse(stored);
       }
     } catch {}
-    // Default to Rohan Sharma (Offer student) for instant demo
-    return this.students[0] || null;
+    return null;
   }
 
   setCurrentUser(user: Student | null) {
@@ -214,10 +224,16 @@ class DemoStore {
     const newRoute: Route = {
       ...route,
       id: `route-${Date.now()}`,
+      created_at: new Date().toISOString(),
     };
-    this.routes.push(newRoute);
+    this.routes.unshift(newRoute);
     this.save();
     return newRoute;
+  }
+
+  deleteRoute(routeId: string) {
+    this.routes = this.routes.filter((r) => r.id !== routeId);
+    this.save();
   }
 
   // Ride Requests & State Machine transitions
@@ -386,18 +402,29 @@ class DemoStore {
     return [...this.reports];
   }
 
-  // Reset to original seed data
+  // Reset to clean empty state (no dummy data)
   resetDemoData() {
     if (typeof localStorage !== 'undefined') {
       localStorage.clear();
+      localStorage.setItem('campusride_cleaned_v2', 'true');
     }
+    this.students = [];
+    this.routes = [];
+    this.verifications = [];
+    this.rideRequests = [];
+    this.notifications = [];
+    this.ratings = [];
+    this.reports = [];
+    this.save();
+  }
+
+  // Load sample seed data for testing
+  loadSampleSeedData() {
     this.students = [...SEED_STUDENTS];
     this.routes = [...SEED_ROUTES];
     this.verifications = [...SEED_VERIFICATION_REQUESTS];
     this.rideRequests = [...SEED_RIDE_REQUESTS];
     this.notifications = [...SEED_NOTIFICATIONS];
-    this.ratings = [];
-    this.reports = [];
     this.save();
   }
 }
